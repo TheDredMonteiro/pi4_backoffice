@@ -1,6 +1,6 @@
 const express = require('express')
 const path = require('path');
-const cors = require('cors')
+//const cors = require('cors')
 const jwt_middleware = require('./jwt_middleware')
 const app = express()
 app.set('port', process.env.PORT || 4011)
@@ -13,10 +13,10 @@ const userRoutes = require('./routes/userRoutes.js')
 const categoriaRoutes = require('./routes/categoriaRoutes.js')
 
 //* Middlewares
-app.use(cors({
+/*app.use(cors({
     origin: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-}));
+}));*/
 app.use(express.json());
 app.use((req, res, next) => {
     console.log('\x1b[37m\x1b[42m ' + req.method + ' \x1b[0m ' + req.url);

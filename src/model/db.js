@@ -2,11 +2,11 @@ const { Sequelize } = require('sequelize');
 // testing
 
 const sequelize = new Sequelize(
-    'pi3-livraria',
-    'postgres',
-    'portugal',
+    'eokrlvyj',
+    'eokrlvyj',
+    'QOan984gvgYwYHIpn5zL8kKqcb3WV2zA',
     {
-        host: 'localhost',
+        host: 'mouse.db.elephantsql.com',
         port: '5432',
         dialect: 'postgres',
         logging: false,

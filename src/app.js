@@ -3,7 +3,7 @@ const path = require('path');
 const cors = require('cors')
 const jwt_middleware = require('./jwt_middleware')
 const app = express()
-app.set('port', process.env.PORT || 4011)
+const port = process.env.port || 8000;
 
 
 const livrosRoutes = require('./routes/livrosRoutes.js')
@@ -32,8 +32,8 @@ app.use('/categorias', categoriaRoutes)
 // rota de introdução, apresenta um html bonitinho só
 app.use('/', (req, res) => {
     res.sendFile(path.join(__dirname + '/index.html'));
-})
+});
 
-app.listen(app.get('port'), () => {
-    console.log('Server online!')
-})
+app.listen(port, () => {
+    console.log('Server online! \n')
+});

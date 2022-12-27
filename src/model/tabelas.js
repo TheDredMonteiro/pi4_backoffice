@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize');
+/*const { DataTypes } = require('sequelize');
 const sequelize = require('./db');
 const bcrypt = require('bcrypt')
 
@@ -462,4 +462,4 @@ module.exports = {
     Categoria,
     User,
     UserRole
-}
+}*/

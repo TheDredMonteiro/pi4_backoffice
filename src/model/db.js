@@ -1,4 +1,4 @@
-const { Sequelize } = require('sequelize');
+/*const { Sequelize } = require('sequelize');
 // testing
 
 const sequelize = new Sequelize(
@@ -35,4 +35,4 @@ const sequelize = new Sequelize(
 
 sequelize.sync()
 
-module.exports = sequelize 
+module.exports = sequelize */

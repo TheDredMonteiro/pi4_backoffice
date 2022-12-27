@@ -1,10 +1,11 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const {conexaoBaseDados} = require('../../config/database');
-const { gerarPasswordUsoUnico } = require('../service/oneTimePassword');
+const { enviarCodigoParaEmail } = require('../service/oneTimePassword');
 
 const login = (req, res) => {
-    const {email} = req.body;
+    const {email, codigoConfirmacao} = req.body;
+    enviarCodigoParaEmail(email, codigoConfirmacao);
     if(!email) {
         res.status(401).json({response: 'É necessário e-mail!'});
     } else {
@@ -15,7 +16,7 @@ const login = (req, res) => {
             } else {
                 if(resultado.rowCount > 0){
                     //gera um número aleatório e guarda na variavel otp.
-                    if(gerarPasswordUsoUnico(oneTimePassword)){
+                    if(enviarCodigoParaEmail(email, codigoConfirmacao)){
                         res.status(200).json({resultado});
                     } else {
                         res.status(401).json({response: 'Código de confirmação inválido, verifique ou tente novamente!'});

@@ -1,12 +1,8 @@
 const postgres = require('pg').Pool;
+require('dotenv').config();
 
-const conexaoBaseDados = new postgres({
-    user: 'eokrlvyj',
-    host: '89.181.218.32',
-    database: 'eokrlvyj',
-    password: 'QOan984gvgYwYHIpn5zL8kKqcb3WV2zA',
-    port: ''
-});
+const {user, host, database, password, port} = process.env;
+const conexaoBaseDados = new postgres({ user, host, database, password, port, });
 
 try {
     conexaoBaseDados.connect();

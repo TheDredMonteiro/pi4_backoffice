@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const jwt_middleware = require('../jwt_middleware')
+const jwt_middleware = require('../midllewers/jwt_middleware')
 const livrosController = require('../controllers/livrosControllers')
 const categoriaController = require('../controllers/categoriaControllers')
 

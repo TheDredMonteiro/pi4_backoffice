@@ -1,5 +1,4 @@
 const jwt = require('jsonwebtoken');
-const config = require('./config.js');
 require('dotenv').config()
 
 module.exports = {
@@ -28,7 +27,7 @@ module.exports = {
             token = token.slice(7, token.length); //remove a palavra 'Bearer '
         }
 
-        jwt.verify(token, config.JWT_SECRET, (err, decoded) => {
+        jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
             if (err) {
                 return res.status(401).json({
                     success: false,

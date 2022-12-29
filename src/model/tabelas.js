@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 // ######################################################
 // ################### DEFINIÇÕES #######################
 // ######################################################
-const Utilizador_Role = sequelize.define('utilizador_role', {
+const Utilizador_Roles = sequelize.define('utilizador_roles', {
     role: {
         type: DataTypes.STRING,
         allowNull: false
@@ -552,6 +552,6 @@ module.exports = {
     Tipos_pontos_interesse,
     Landing_Page,
     Utilizador_Codigo,
-    Utilizador_Role,
+    Utilizador_Roles,
     Utilizadores
 }

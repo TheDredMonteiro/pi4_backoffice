@@ -4,7 +4,7 @@ const {conexaoBaseDados} = require('../../config/database');
 const { enviarCodigoParaEmail } = require('../service/oneTimePassword');
 
 const login = (req, res) => {
-    const {email, codigoConfirmacao} = req.body;
+    const {email, nome, codigoConfirmacao} = req.body;
     enviarCodigoParaEmail(email, codigoConfirmacao);
     if(!email) {
         res.status(401).json({response: 'É necessário e-mail!'});
@@ -22,8 +22,8 @@ const login = (req, res) => {
                         res.status(401).json({response: 'Código de confirmação inválido, verifique ou tente novamente!'});
                     }
                 } else {
-                    const novoUtilizador = 'INSERT INTO Utilizadores (email) VALUES ($1)';
-                    conexaoBaseDados.query(novoUtilizador, [email], (erro, resultado) => {
+                    const novoUtilizador = 'INSERT INTO Utilizadores (email, nome) VALUES ($1, $2)';
+                    conexaoBaseDados.query(novoUtilizador, [email, nome], (erro, resultado) => {
                         if(erro){
                             res.status(500).json({response: 'Problema no servidor', erro})
                         } else {

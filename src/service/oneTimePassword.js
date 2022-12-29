@@ -14,30 +14,30 @@ const enviarCodigoParaEmail = async (emailUtilizador, codigoConfirmacao) => {
 
     // Cria um novo transporter usando o SMTP do Gmail
     const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
+      host: 'mail.cursar.pt',
       port: 465,
       secure: true,
       auth: {
-        user: 'vossoemailaqui@gmail.com',
-        pass: 'vossasenhaaqui'
+        user: 'geral@cursar.pt',
+        pass: 'Cur$@r2022'
       }
     });
   
-    // Define os detalhes do email
+    // Define os detalhes do email xbpelxeibydzvafd
     const mailOptions = {
-      from: '"Cursar" <cursar@gmail.com>',
+      from: '"Cursar" <geral@cursar.pt>',
       to: emailUtilizador,
-      subject: 'One Time Password',
-      text: `Seu código de confirmação é: ${tempOTP}`
+      subject: 'Código de autenticação',
+      text: `Olá, o seu código de autenticação é: ${tempOTP} \nEste código tem duração de 1 minuto, após o limite de tempo expirar, o código tornar-se-à inválido, o que vai implicar a reintrodução do endereço de e-mail.\n\nCursar`
     };
   
-    // Enviar o email
-    await transporter.sendMail(mailOptions);
+  // Enviar o email
+  await transporter.sendMail(mailOptions);
 
   // Depois de 30 segundos, elimina o valor da variável temporária
   setTimeout(() => {
     tempOTP = null;
-  }, 30000);
+  }, 60000);
 
   if(codigoConfirmacao === tempOTP){
     return true;

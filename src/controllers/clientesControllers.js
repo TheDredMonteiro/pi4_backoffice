@@ -248,7 +248,14 @@ module.exports = {
                 return
             }
             else if (user.estado == 2){
-                if (user.password == password) {
+                if (user.role == 4) {
+                    res.status(403).json({
+                        success: false,
+                        message: 'Esta conta de cliente pentence a um cliente e por isso não tem acesso á area de gestão.'
+                    });
+                    return
+                }
+                else {
                     console.log("a")
                     let token = jwt.sign({ email: email }, config.JWT_SECRET,
                         // { expiresIn: '24h' }
@@ -259,6 +266,7 @@ module.exports = {
                         message: 'Autenticação realizada com sucesso!',
                         token: token,
                         username: user.username,
+                        //role: user.role,
                         email: user.email
                     });
                     return

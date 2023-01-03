@@ -1,5 +1,10 @@
 const nodemailer = require('nodemailer');
-
+var { Utilizadores, Utilizador_Roles } = require('../model/tabelas')
+const jwt = require('jsonwebtoken');
+const config = require('../config');
+const bcrypt = require('bcrypt');
+const sequelize = require('../model/db');
+const { Op } = require("sequelize");
 let tempOTP;
 
 const emailEnviado = async (emailUtilizador) => {
@@ -25,7 +30,20 @@ const emailEnviado = async (emailUtilizador) => {
     subject: 'Código de autenticação',
     text: `Olá, o seu código de autenticação é: ${tempOTP} \nEste código tem duração de 1 minuto, após o limite de tempo expirar, o código tornar-se-à inválido, o que vai implicar a reintrodução do endereço de e-mail.\n\nCursar`
   };
-  
+  /*await sequelize.sync()
+            .then(async () => {
+                await Utilizadores
+                    .update({
+                        codigo: tempOTP
+                    }, {
+                        where: { email: emailUtilizador }
+                    })
+
+            })
+
+
+
+            .then(() => res.status(200).json({ success: true, message: "Classificação atualizada" }))*/
   await transporter.sendMail(mailOptions); // Enviar e-mail.
 
   // Depois de 1 minuto, elimina o valor da variável temporária.

@@ -1,384 +1,41 @@
-/*const { DataTypes } = require('sequelize');
+const { DataTypes } = require('sequelize');
 const sequelize = require('./db');
 const bcrypt = require('bcrypt')
 
 // ######################################################
 // ################### DEFINIÇÕES #######################
 // ######################################################
-
-
-const Cliente = sequelize.define('cliente',
-    {
-        nome: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mO nome do cliente não pode estar vazio.\x1b[0m'
-                }
-            }
-        },
-        email: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mO email do cliente não pode estar vazio. Os orçamentos são enviados para lá!\x1b[0m'
-                },
-                isEmail: {
-                    args: true,
-                    msg: '\x1b[31mO email inserido não é válido.\x1b[0m'
-                }
-            }
-        },
-        password: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mA password não pode estar vazia.\x1b[0m'
-                }
-            }
-        },
-        n_livros: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mO nome do cliente não pode estar vazio.\x1b[0m'
-                }
-            }
-        },
-        estado: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mO nome do cliente não pode estar vazio.\x1b[0m'
-                }
-            }
-        },
-        tlm: { type: DataTypes.INTEGER },
-    },
-    {
-        freezeTableName: true,
-        paranoid: true,
-        timestamps: true,
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
-        deletedAt: 'deleted_at',
-    }
-)
-const Categoria = sequelize.define('categoria',
-    {
-        nome: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mO autor do livro não pode estar vazio.\x1b[0m'
-                }
-            }
-        }, 
-        n_livros: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mO autor do livro não pode estar vazio.\x1b[0m'
-                }
-            }
-        }, 
-        
-    },
-)
-const Livro = sequelize.define('livro',
-    {
-        titulo: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mO titulo do livro não pode estar vazio.\x1b[0m'
-                }
-            }
-        },
-        autor: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mO autor do livro não pode estar vazio.\x1b[0m'
-                }
-            }
-        }, 
-        sinopse: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mA sinopse do livro não pode estar vazia.\x1b[0m'
-                }
-            }
-        }, 
-        foto: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mA foto do livro não pode estar vazia.\x1b[0m'
-                }
-            }
-        },  
-        
-        stock: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mO stock do livro não pode estar vazia.\x1b[0m'
-                }
-            }
-        },
-        
-        classificacao: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mO stock do livro não pode estar vazia.\x1b[0m'
-                }
-            }
-        }, 
-        n_lido: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mO stock do livro não pode estar vazia.\x1b[0m'
-                }
-            }
-        }, 
-        deleted: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mO stock do livro não pode estar vazia.\x1b[0m'
-                }
-            }
-        },
-        categoria: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mA foto do livro não pode estar vazia.\x1b[0m'
-                }
-            }
-        },  
-        
-    },
-    {
-        freezeTableName: true,
-        paranoid: true,
-        timestamps: true,
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
-        deletedAt: 'deleted_at',
-    }
-)
-Categoria.hasMany(Livro, {
-    foreignKey: {
-        name: 'id_categoria',
+const Utilizador_Roles = sequelize.define('utilizador_roles', {
+    role: {
+        type: DataTypes.STRING,
         allowNull: false
     }
-})
-Livro.belongsTo(Categoria, {
-    foreignKey: {
-        name: 'id_categoria',
-        allowNull: false
-    }
-})
-const Cliente_Livro = sequelize.define('cliente_livro',
-    {
-        titulo: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mO titulo do livro não pode estar vazio.\x1b[0m'
-                }
-            }
-        },
-        classificacao: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mO stock do livro não pode estar vazia.\x1b[0m'
-                }
-            }
-        }, 
-        autor: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mO autor do livro não pode estar vazio.\x1b[0m'
-                }
-            }
-        }, 
-        sinopse: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mA sinopse do livro não pode estar vazia.\x1b[0m'
-                }
-            }
-        }, 
-        foto: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mA foto do livro não pode estar vazia.\x1b[0m'
-                }
-            }
-        },  
-        
-        id_categoria: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mO stock do livro não pode estar vazia.\x1b[0m'
-                }
-            }
-        }, 
-        lido: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mO lido não pode estar vazio.\x1b[0m'
-                }
-            }
-        },
-        
-        categoria: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mA foto do livro não pode estar vazia.\x1b[0m'
-                }
-            }
-        },  
-        
-        
-    },
-    {
-        freezeTableName: true,
-        paranoid: true,
-        timestamps: true,
-        createdAt: 'created_at',
-        updatedAt: 'updated_at',
-        deletedAt: 'deleted_at',
-        
-        
-    },
-)
-Cliente.hasMany(Cliente_Livro, {
-    foreignKey: {
-        name: 'id_cliente',
-        allowNull: false
-    }
-})
-Cliente_Livro.belongsTo(Cliente, {
-    foreignKey: {
-        name: 'id_cliente',
-        allowNull: false
-    }
-})
-Livro.hasMany(Cliente_Livro, {
-    foreignKey: {
-        name: 'id_livro',
-        allowNull: false
-    }
-})
-Cliente_Livro.belongsTo(Livro, {
-    foreignKey: {
-        name: 'id_livro',
-        allowNull: false
-    }
-})
-const Cliente_Categoria = sequelize.define('cliente_categoria',
-    {
-        nome: {
-            type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                notNull: {
-                    args: true,
-                    msg: '\x1b[31mO autor do livro não pode estar vazio.\x1b[0m'
-                }
-            }
-        }, 
-    },
-)
-Cliente.hasMany(Cliente_Categoria, {
-    foreignKey: {
-        name: 'id_cliente',
-        allowNull: false
-    }
-})
-Cliente_Categoria.belongsTo(Cliente, {
-    foreignKey: {
-        name: 'id_cliente',
-        allowNull: false
-    }
-})
-Categoria.hasMany(Cliente_Categoria, {
-    foreignKey: {
-        name: 'id_categoria',
-        allowNull: false
-    }
-})
-Cliente_Categoria.belongsTo(Categoria, {
-    foreignKey: {
-        name: 'id_categoria',
-        allowNull: false
-    }
+}, {
+    freezeTableName: true,
+    timestamps: false
 })
 
+const Tipos_pontos_interesse = sequelize.define('tipos_pontos_interesse', {
+    tipo_ponto_interesse: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    }
+}, {
+    freezeTableName: true,
+    timestamps: false
+})
 
-const User = sequelize.define('user', {
+const Utilizadores = sequelize.define('utilizadores', {
+    nome: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notNull: {
+                args: true,
+                msg: '\x1b[31mO nome não pode estar vazio.\x1b[0m'
+            }
+        }
+    },
     email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -393,60 +50,465 @@ const User = sequelize.define('user', {
             }
         }
     },
-    username: {
+    nif: {
         type: DataTypes.STRING,
+        allowNull: true
+    },
+    pontos: {
+        type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
             notNull: {
                 args: true,
-                msg: '\x1b[31mO username não pode estar vazio.\x1b[0m'
+                msg: '\x1b[31mOs pontos não podem estar vazios.\x1b[0m'
             }
         }
     },
-    password: {
+    fotografia: {
         type: DataTypes.STRING,
+        allowNull: true
+        
+    },
+    data_nascimento: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    estado: {
+        type: DataTypes.BOOLEAN,
         allowNull: false,
         validate: {
             notNull: {
                 args: true,
-                msg: '\x1b[31mA password não pode estar vazia.\x1b[0m'
+                msg: '\x1b[31mO estado não pode estar vazio.\x1b[0m'
             }
         }
+    },
+    data_ativacao: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    data_desativacao: {
+        type: DataTypes.DATE,
+        allowNull: true
     }
 }, {
     freezeTableName: true,
     timestamps: false
 })
 
-User.beforeCreate(user => {
-
-    return bcrypt.hash(user.password, 10)
-        .then(hash => { user.password = hash; })
-        .catch(err => { throw new Error(err); });
-});
-
-const UserRole = sequelize.define('user_role', {
+const Pontos_interesse = sequelize.define('pontos_interesse', {
+    ponto_interesse: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    fotografia_1: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    fotografia_2: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    fotografia_3: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    qrcode: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
     descricao: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true
     },
-    obs: {
-        type: DataTypes.STRING
+    pontos: {
+        type: DataTypes.INTEGER,
+        allowNull: false
     }
 }, {
     freezeTableName: true,
     timestamps: false
 })
 
-UserRole.hasMany(User, {
+const Lugar = sequelize.define('lugar', {
+    
+}, {
+    freezeTableName: true,
+    timestamps: false
+})
+
+const Reservas = sequelize.define('reservas', {
+    num_vagas: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    presenca: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true
+    },
+    data_reserva: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    data_anulacao_reserva: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    data_visita: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    estado: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true
+    }
+}, {
+    freezeTableName: true,
+    timestamps: false
+})
+
+const Visitas = sequelize.define('visitas', {
+    data_visita: {
+        type: DataTypes.DATE,
+        allowNull: false
+    },
+    vagas: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    N_reservas: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    }
+}, {
+    freezeTableName: true,
+    timestamps: false
+})
+
+const Recompensas = sequelize.define('recompensas', {
+    recompensa: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    descricao: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    num_pontos: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
+    disponivel: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false
+    },
+    validade: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    }
+}, {
+    freezeTableName: true,
+    timestamps: false
+})
+
+const Regioes = sequelize.define('regioes', {
+    tipo_ponto_interesse: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    }
+}, {
+    freezeTableName: true,
+    timestamps: false
+})
+
+Pontos_interesse.hasMany(Lugar, {
     foreignKey: {
-        name: 'role_id',
+        name: 'id_ponto_interesse',
         allowNull: false
     }
 })
-User.belongsTo(UserRole, {
+Lugar.belongsTo(Pontos_interesse, {
     foreignKey: {
-        name: 'role_id',
+        name: 'id_ponto_interesse',
+        allowNull: false
+    }
+})
+Reservas.hasMany(Lugar, {
+    foreignKey: {
+        name: 'id_reserva',
+        allowNull: false
+    }
+})
+Lugar.belongsTo(Reservas, {
+    foreignKey: {
+        name: 'id_reserva',
+        allowNull: false
+    }
+})
+
+const Leitura_QR = sequelize.define('leitura_qr', {
+    data_hora: {
+        type: DataTypes.DATE,
+        allowNull: false
+    }
+    
+}, {
+    freezeTableName: true,
+    timestamps: false
+})
+Utilizadores.hasMany(Leitura_QR, {
+    foreignKey: {
+        name: 'id_utilizador',
+        allowNull: false
+    }
+})
+Leitura_QR.belongsTo(Utilizadores, {
+    foreignKey: {
+        name: 'id_utilizador',
+        allowNull: false
+    }
+})
+Pontos_interesse.hasMany(Leitura_QR, {
+    foreignKey: {
+        name: 'id_ponto_interesse',
+        allowNull: false
+    }
+})
+Leitura_QR.belongsTo(Pontos_interesse, {
+    foreignKey: {
+        name: 'id_ponto_interesse',
+        allowNull: false
+    }
+})
+Reservas.hasMany(Leitura_QR, {
+    foreignKey: {
+        name: 'id_reserva',
+        allowNull: false
+    }
+})
+Leitura_QR.belongsTo(Reservas, {
+    foreignKey: {
+        name: 'id_reserva',
+        allowNull: false
+    }
+})
+
+Utilizadores.hasMany(Reservas, {
+    foreignKey: {
+        name: 'id_utilizador',
+        allowNull: false
+    }
+})
+Reservas.belongsTo(Utilizadores, {
+    foreignKey: {
+        name: 'id_utilizador',
+        allowNull: false
+    }
+})
+Visitas.hasMany(Reservas, {
+    foreignKey: {
+        name: 'id_visita',
+        allowNull: false
+    }
+})
+Reservas.belongsTo(Visitas, {
+    foreignKey: {
+        name: 'id_visita',
+        allowNull: false
+    }
+})
+
+const Vouchers = sequelize.define('vouchers', {
+    qrcode: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    data_emissao: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    data_validade: {
+        type: DataTypes.DATE,
+        allowNull: true
+    },
+    data_remissao: {
+        type: DataTypes.DATE,
+        allowNull: true
+    }
+}, {
+    freezeTableName: true,
+    timestamps: false
+})
+
+Utilizadores.hasMany(Vouchers, {
+    foreignKey: {
+        name: 'id_utilizador',
+        allowNull: false
+    }
+})
+Vouchers.belongsTo(Utilizadores, {
+    foreignKey: {
+        name: 'id_utilizador',
+        allowNull: false
+    }
+})
+
+Recompensas.hasMany(Vouchers, {
+    foreignKey: {
+        name: 'id_recompensa',
+        allowNull: false
+    }
+})
+Vouchers.belongsTo(Recompensas, {
+    foreignKey: {
+        name: 'id_recompensa',
+        allowNull: false
+    }
+})
+
+
+Utilizadores.hasMany(Recompensas, {
+    foreignKey: {
+        name: 'id_utilizador',
+        allowNull: false
+    }
+})
+Recompensas.belongsTo(Utilizadores, {
+    foreignKey: {
+        name: 'id_utilizador',
+        allowNull: false
+    }
+})
+
+Pontos_interesse.hasMany(Visitas, {
+    foreignKey: {
+        name: 'id_ponto_interesse',
+        allowNull: false
+    }
+})
+Visitas.belongsTo(Pontos_interesse, {
+    foreignKey: {
+        name: 'id_ponto_interesse',
+        allowNull: false
+    }
+})
+
+const Favoritos = sequelize.define('favoritos', {
+}, {
+    freezeTableName: true,
+    timestamps: false
+})
+
+Pontos_interesse.hasMany(Favoritos, {
+    foreignKey: {
+        name: 'id_ponto_interesse',
+        allowNull: false
+    }
+})
+Favoritos.belongsTo(Pontos_interesse, {
+    foreignKey: {
+        name: 'id_ponto_interesse',
+        allowNull: false
+    }
+})
+Utilizadores.hasMany(Favoritos, {
+    foreignKey: {
+        name: 'id_utilizador',
+        allowNull: false
+    }
+})
+Favoritos.belongsTo(Utilizadores, {
+    foreignKey: {
+        name: 'id_utilizador',
+        allowNull: false
+    }
+})
+
+
+
+Regioes.hasMany(Pontos_interesse, {
+    foreignKey: {
+        name: 'id_regiao',
+        allowNull: false
+    }
+})
+Pontos_interesse.belongsTo(Regioes, {
+    foreignKey: {
+        name: 'id_regiao',
+        allowNull: false
+    }
+})
+
+Tipos_pontos_interesse.hasMany(Pontos_interesse, {
+    foreignKey: {
+        name: 'id_tipo_ponto_interesse',
+        allowNull: false
+    }
+})
+Pontos_interesse.belongsTo(Tipos_pontos_interesse, {
+    foreignKey: {
+        name: 'id_tipo_ponto_interesse',
+        allowNull: false
+    }
+})
+
+const Landing_Page = sequelize.define('landing_page', {
+
+    hero_titulo: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    hero_descricao: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    hero_imagem: {
+        type: DataTypes.STRING,
+        allowNull: false
+    },
+    body_titulo: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    body_descricao: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    fotografia_1: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    fotografia_2: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    fotografia_3: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    imagem_android: {
+        type: DataTypes.STRING,
+        allowNull: true
+    }
+}, {
+    
+    freezeTableName: true,
+    timestamps: false
+})
+
+
+
+
+
+Utilizador_Roles.hasMany(Utilizadores, {
+    foreignKey: {
+        name: 'id_role',
+        allowNull: false
+    }
+})
+Utilizadores.belongsTo(Utilizador_Roles, {
+    foreignKey: {
+        name: 'id_role',
         allowNull: false
     }
 })
@@ -455,11 +517,17 @@ User.belongsTo(UserRole, {
 
 
 module.exports = {
-    Livro,
-    Cliente,
-    Cliente_Livro,
-    Cliente_Categoria,
-    Categoria,
-    User,
-    UserRole
-}*/
+    Lugar,
+    Leitura_QR,
+    Vouchers,
+    Reservas,
+    Recompensas,
+    Visitas,
+    Favoritos,
+    Pontos_interesse,
+    Regioes,
+    Tipos_pontos_interesse,
+    Landing_Page,
+    Utilizador_Roles,
+    Utilizadores
+}

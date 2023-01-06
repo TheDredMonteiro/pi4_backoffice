@@ -1,0 +1,30 @@
+.list{
+    display: flex;
+    width: 100%;
+
+    .listContainer{
+        background-color: #46483C;
+        flex: 6;
+
+        .margins{
+            margin: 20px 60px 60px 60px;
+        }
+
+        .lists{
+            background-color: #E9F3DE;
+            display:flex;
+            padding: 20px;
+            gap: 20px; 
+            padding-bottom: 90px;  
+        }
+
+    }
+
+    .allTable{
+        margin-top: 15px;
+        background: #E9F3DE;
+        -webkit-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.47);
+        box-shadow: 0px 0px 0px 0px rgba(201, 201, 201, 0.47);
+
+    }
+}

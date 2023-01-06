@@ -1,0 +1,28 @@
+.home{
+    display: flex;
+    
+        .homeContainer{
+            background-color: #46483C;
+            flex: 6;
+    
+            .margins{
+                margin: 20px 60px 60px 60px;
+            }
+    
+            .widgets, .charts, .listContainer{
+                background-color: #E9F3DE;
+                display:flex;
+                padding: 20px;
+                gap: 20px;    
+            }
+    
+            .charts{
+                padding-top: 20px;
+                background: #E9F3DE;
+                -webkit-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.47);
+                box-shadow: 0px 0px 0px 0px rgba(201, 201, 201, 0.47);
+            }
+
+        }
+    }
+    

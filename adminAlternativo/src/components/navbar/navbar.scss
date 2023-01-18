@@ -1,0 +1,53 @@
+.navbar{
+    height: 100px;
+    display: flex;
+    align-items: center;
+    font-size: 22px;
+    color: #D3D4A9;
+    font-weight: 600;
+
+    .wrapper{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-left: 60px;
+
+    }
+
+    .user{
+        display: flex;
+        align-items: center;
+        font-size: 18px;
+        padding-right: 60px;
+        font-weight: 500;
+
+
+
+        .name{
+            text-align: right;
+            padding-right: 20px;
+        }
+
+        .iduser{
+            color: #fff;
+        }
+
+        .role{
+            color: #616D38;
+            font-weight: 300;
+        }
+
+        .photo{
+
+            .avatar{
+                width: 60px;
+                height: 60px;
+                border-radius: 50%;
+            }
+        }
+
+    }
+
+
+}

@@ -13,7 +13,8 @@ module.exports = {
 
     login: async (req, res) => {
         console.log("usercontrollers login");
-        const {email} = req.body;
+        //const {email} = req.body;
+        const email = req.query.filtro ?? 'monteiro.andr1@gmail.com'
         if(!email) {
             res.status(StatusCodes.BAD_REQUEST).json({response: 'É necessário e-mail!'});
         } else {
@@ -120,6 +121,9 @@ module.exports = {
             .then(async () => {
 
                 const data = await Utilizadores.findAll({
+                    include: [
+                        { model: Utilizador_Roles }
+                    ],
                     order: [
                         [filtro, ordem]
                     ]

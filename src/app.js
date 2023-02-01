@@ -20,6 +20,7 @@ app.use((req, res, next) => {
 
 //* Rotas
 app.use('/user', require('./routes/userRoutes'));
+app.use('/pontos', require('./routes/pontosRoutes'));
 
 // rota de introdução, apresenta um html bonitinho só
 app.use('/', (req, res) => {

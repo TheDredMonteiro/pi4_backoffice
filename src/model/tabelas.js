@@ -131,6 +131,14 @@ const Pontos_interesse = sequelize.define('pontos_interesse', {
         type: DataTypes.STRING,
         allowNull: true
     },
+    morada: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    telefone: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
     pontos: {
         type: DataTypes.INTEGER,
         allowNull: false
@@ -458,6 +466,19 @@ Tipos_pontos_interesse.hasMany(Pontos_interesse, {
 Pontos_interesse.belongsTo(Tipos_pontos_interesse, {
     foreignKey: {
         name: 'id_tipo_ponto_interesse',
+        allowNull: false
+    }
+})
+
+Utilizadores.hasMany(Pontos_interesse, {
+    foreignKey: {
+        name: 'id_utilizador',
+        allowNull: false
+    }
+})
+Pontos_interesse.belongsTo(Utilizadores, {
+    foreignKey: {
+        name: 'id_utilizador',
         allowNull: false
     }
 })

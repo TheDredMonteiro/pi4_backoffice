@@ -83,6 +83,16 @@ const Utilizadores = sequelize.define('utilizadores', {
             }
         }
     },
+    password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+            notNull: {
+                args: true,
+                msg: '\x1b[31mO nome não pode estar vazio.\x1b[0m'
+            }
+        }
+    },
     data_ativacao: {
         type: DataTypes.DATE,
         allowNull: true

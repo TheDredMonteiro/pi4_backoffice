@@ -5,34 +5,34 @@ const bcrypt = require('bcrypt');
 const oneTimePassword = require('../service/oneTimePassword');
 const sequelize = require('../model/db');
 const { Op } = require("sequelize");
-const {StatusCodes} = require('http-status-codes');
-const {conexaoBaseDados} = require('../../config/database');
+const { StatusCodes } = require('http-status-codes');
+const { conexaoBaseDados } = require('../../config/database');
 const { emailEnviado, compareCodigo } = require('../service/oneTimePassword');
 //import OTP from '../service/oneTimePassword'
 module.exports = {
 
     login: async (req, res) => {
         console.log("usercontrollers login");
-        const {email} = req.body;
-        if(!email) {
-            res.status(StatusCodes.BAD_REQUEST).json({response: 'É necessário e-mail!'});
+        const { email } = req.body;
+        if (!email) {
+            res.status(StatusCodes.BAD_REQUEST).json({ response: 'É necessário e-mail!' });
         } else {
             const verificarEmail = 'SELECT Email FROM Utilizadores WHERE Email = $1';
             conexaoBaseDados.query(verificarEmail, [email], (erro, resultado) => {
-                if(erro){
-                    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({erro: 'Problema no servidor! Houve algum erro ao verificar o correio eletrónico.'});
+                if (erro) {
+                    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ erro: 'Problema no servidor! Houve algum erro ao verificar o correio eletrónico.' });
                 } else {
-                    if(resultado.rowCount > 0){
-                        if(emailEnviado(email)){
-                           res.status(StatusCodes.OK).json({ resultado });
+                    if (resultado.rowCount > 0) {
+                        if (emailEnviado(email)) {
+                            res.status(StatusCodes.OK).json({ resultado });
                         } else {
-                            res.status(StatusCodes.FORBIDDEN).json({response: 'Problema no envio do código de confirmação!'});
+                            res.status(StatusCodes.FORBIDDEN).json({ response: 'Problema no envio do código de confirmação!' });
                         }
                     } else {
                         const novoUtilizador = 'INSERT INTO Utilizadores (email) VALUES ($1)';
                         conexaoBaseDados.query(novoUtilizador, [email], (erro, resultado) => {
-                            if(erro){
-                                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({response: 'Problema no servidor, não foi possível fazer o registo!', erro});
+                            if (erro) {
+                                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ response: 'Problema no servidor, não foi possível fazer o registo!', erro });
                             } else {
                                 res.status(StatusCodes.OK).json({ resultado });
                             };
@@ -64,6 +64,26 @@ module.exports = {
             .catch(error => { console.log(error) })
 
         console.log(user)
+        /*if(user.id_role == 4)
+        {
+            
+            res.status(400).json({
+                success: false,
+                message: 'Utilizadores não têm acesso a parte de gestão.'
+            });
+            return
+        }
+        else if(user.estado == "false")
+        {
+            res.status(401).json({
+                success: false,
+                message: 'Esta conta está desativada'
+            });
+            return
+        }
+        else
+        {*/
+        if ((user.id_role != 4) && (user.estado != "false")) {
 
             let token = jwt.sign({ email: email }, config.JWT_SECRET,
                 // { expiresIn: '24h' }
@@ -79,34 +99,92 @@ module.exports = {
                 email: user.email
             });
             return
-        
+        }
+
+        //}
+        res.status(403).json({
+            success: false,
+
+            message: 'Dados inválidos.'
+        });
+
+    },
+    login2: async (req, res) => {
+
+        let email, password = null
+
+        if (!!req.body.email && !!req.body.password) {
+            email = req.body.email
+            password = req.body.password
+        } else {
+            res.status(403).json({
+                success: false,
+                message: 'Dados necessários: email e password'
+            });
+            return
+        }
+
+        let user = await Utilizadores
+            .findOne({ where: { email: email } })
+            .then(data => { return data })
+            .catch(error => { console.log(error) })
+
+        console.log(user)
+
+
+
+        if (!!user) {
+        console.log("b")
+        if (user.password == password) {
+            console.log("a")
+            let token = jwt.sign({ email: email }, config.JWT_SECRET,
+                // { expiresIn: '24h' }
+            );
+
+            res.status(200).json({
+                success: true,
+                message: 'Autenticação realizada com sucesso!',
+                token: token,
+                username: user.nome,
+                role: user.id_role,
+                id: user.id,
+                email: user.email
+            });
+            return
+        }
+    }
+
+        res.status(403).json({
+            success: false,
+            message: 'Dados inválidos.'
+        });
     },
     verificaCodigo: async (req, res) => {
         console.log("entrou verifica");
         const { otp } = req.body;
-        if(compareCodigo(otp)){
-            res.status(StatusCodes.OK).json({success: true, response: true });
+        if (compareCodigo(otp)) {
+            res.status(StatusCodes.OK).json({ success: true, response: true });
         } else {
-            res.status(StatusCodes.UNAUTHORIZED).json({ erro: 'Código incorreto, verifique o seu correio eletrónico!'});
+            res.status(StatusCodes.UNAUTHORIZED).json({ erro: 'Código incorreto, verifique o seu correio eletrónico!' });
         }
     },
     update_estado: async (req, res) => {
-       
-        const id = req.body.id 
-        const estado = req.body.estado 
 
-    
+        const id = req.body.id
+        const estado = req.body.estado
+
+
 
         await sequelize.sync()
             .then(async () => {
                 await Utilizadores
-                .update({
-                    estado: estado
-                }, {
-                    where: { id: id }
-                })
-                .then(() => res.status(200).json({ success: true, message: "Estado atualizado" }))
-                .catch(error => { res.status(400); throw new Error(error); });
+                    .update({
+                        estado: estado
+                    }, {
+                        where: { id: id }
+                    })
+                    .then(() => res.status(200).json({ success: true, message: "Estado atualizado" }))
+                    .catch(error => { res.status(400); throw new Error(error); });
             })
 
 
@@ -120,6 +198,9 @@ module.exports = {
             .then(async () => {
 
                 const data = await Utilizadores.findAll({
+                    include: [
+                        { model: Utilizador_Roles }
+                    ],
                     order: [
                         [filtro, ordem]
                     ]
@@ -133,22 +214,22 @@ module.exports = {
                 res.json({ success: true, data: data });
             })
     },
-   /* list: async (req, res) => {
-        await sequelize.sync()
-            .then(async () => {
-                await User
-                    .findAll({
-                        attributes: ['username', 'email'],
-                        include: {
-                            model: UserRole,
-                            attributes: ['descricao', 'obs']
-                        }
-                    })
-                    .then(data => { res.json({ success: true, data }) })
-                    .catch(error => { return error })
-            })
-
-    },*/
+    /* list: async (req, res) => {
+         await sequelize.sync()
+             .then(async () => {
+                 await User
+                     .findAll({
+                         attributes: ['username', 'email'],
+                         include: {
+                             model: UserRole,
+                             attributes: ['descricao', 'obs']
+                         }
+                     })
+                     .then(data => { res.json({ success: true, data }) })
+                     .catch(error => { return error })
+             })
+ 
+     },*/
 
     register: async (req, res) => {
         if (

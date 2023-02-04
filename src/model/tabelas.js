@@ -5,7 +5,7 @@ const bcrypt = require('bcrypt')
 // ######################################################
 // ################### DEFINIÇÕES #######################
 // ######################################################
-const Utilizador_Roles = sequelize.define('utilizador_roles', {
+const Utilizadores_Roles = sequelize.define('utilizadores_roles', {
     role: {
         type: DataTypes.STRING,
         allowNull: false
@@ -230,7 +230,11 @@ const Recompensas = sequelize.define('recompensas', {
 })
 
 const Regioes = sequelize.define('regioes', {
-    tipo_ponto_interesse: {
+    regiao: {
+        type: DataTypes.STRING,
+        allowNull: false,
+    },
+    fotografia_1: {
         type: DataTypes.STRING,
         allowNull: false,
     }
@@ -263,54 +267,6 @@ Lugar.belongsTo(Reservas, {
         allowNull: false
     }
 })
-
-const Leitura_QR = sequelize.define('leitura_qr', {
-    data_hora: {
-        type: DataTypes.DATE,
-        allowNull: false
-    }
-    
-}, {
-    freezeTableName: true,
-    timestamps: false
-})
-Utilizadores.hasMany(Leitura_QR, {
-    foreignKey: {
-        name: 'id_utilizador',
-        allowNull: false
-    }
-})
-Leitura_QR.belongsTo(Utilizadores, {
-    foreignKey: {
-        name: 'id_utilizador',
-        allowNull: false
-    }
-})
-Pontos_interesse.hasMany(Leitura_QR, {
-    foreignKey: {
-        name: 'id_ponto_interesse',
-        allowNull: false
-    }
-})
-Leitura_QR.belongsTo(Pontos_interesse, {
-    foreignKey: {
-        name: 'id_ponto_interesse',
-        allowNull: false
-    }
-})
-Reservas.hasMany(Leitura_QR, {
-    foreignKey: {
-        name: 'id_reserva',
-        allowNull: false
-    }
-})
-Leitura_QR.belongsTo(Reservas, {
-    foreignKey: {
-        name: 'id_reserva',
-        allowNull: false
-    }
-})
-
 Utilizadores.hasMany(Reservas, {
     foreignKey: {
         name: 'id_utilizador',
@@ -482,6 +438,18 @@ Pontos_interesse.belongsTo(Utilizadores, {
         allowNull: false
     }
 })
+Utilizadores.hasMany(Regioes, {
+    foreignKey: {
+        name: 'id_utilizador',
+        allowNull: false
+    }
+})
+Regioes.belongsTo(Utilizadores, {
+    foreignKey: {
+        name: 'id_utilizador',
+        allowNull: false
+    }
+})
 
 const Landing_Page = sequelize.define('landing_page', {
 
@@ -531,13 +499,13 @@ const Landing_Page = sequelize.define('landing_page', {
 
 
 
-Utilizador_Roles.hasMany(Utilizadores, {
+Utilizadores_Roles.hasMany(Utilizadores, {
     foreignKey: {
         name: 'id_role',
         allowNull: false
     }
 })
-Utilizadores.belongsTo(Utilizador_Roles, {
+Utilizadores.belongsTo(Utilizadores_Roles, {
     foreignKey: {
         name: 'id_role',
         allowNull: false
@@ -549,7 +517,6 @@ Utilizadores.belongsTo(Utilizador_Roles, {
 
 module.exports = {
     Lugar,
-    Leitura_QR,
     Vouchers,
     Reservas,
     Recompensas,
@@ -559,6 +526,6 @@ module.exports = {
     Regioes,
     Tipos_pontos_interesse,
     Landing_Page,
-    Utilizador_Roles,
+    Utilizadores_Roles,
     Utilizadores
 }

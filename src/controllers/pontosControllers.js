@@ -21,9 +21,13 @@ module.exports = {
 
                 const data = await Pontos_interesse.findAll({
                     include: [
-                        { model: Regioes, 
-                        model: Utilizadores,
-                        model: Tipos_pontos_interesse}
+                        {model: Utilizadores}
+                    ],
+                    include: [
+                        {model: Regioes}
+                    ],
+                    include: [
+                        {model: Tipos_pontos_interesse}
                     ],
                     order: [
                         [filtro, ordem]

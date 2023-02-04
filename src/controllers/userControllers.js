@@ -1,4 +1,4 @@
-var { Utilizadores, Utilizador_Roles } = require('../model/tabelas')
+var { Utilizadores, Utilizadores_Roles } = require('../model/tabelas')
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const bcrypt = require('bcrypt');
@@ -215,6 +215,29 @@ module.exports = {
 
 
     },
+    agente: async (req, res) => {
+        // para filtrar por estado
+        const id = req.query.id ?? ''
+
+        await sequelize.sync()
+            .then(async () => {
+
+                const data = await Utilizadores.findOne({
+                    where: { id: id },
+                    include: [
+                        { model: Utilizadores_Roles}
+                    ]
+                   
+                })
+                    .then(function (data) {
+                        return data;
+                    })
+                    .catch(error => {
+                        return error;
+                    });
+                res.json({ success: true, data: data });
+            })
+    },
     list: async (req, res) => {
         // para filtrar por estado
         const filtro = req.query.filtro ?? 'id'
@@ -225,7 +248,7 @@ module.exports = {
 
                 const data = await Utilizadores.findAll({
                     include: [
-                        { model: Utilizador_Roles }
+                        { model: Utilizadores_Roles }
                     ],
                     order: [
                         [filtro, ordem]

@@ -12,35 +12,31 @@ const { emailEnviado, compareCodigo } = require('../service/oneTimePassword');
 module.exports = {
 
     login: async (req, res) => {
-        console.log("usercontrollers login");
-        const { email } = req.body;
-        if (!email) {
-            res.status(StatusCodes.BAD_REQUEST).json({ response: 'É necessário e-mail!' });
-        } else {
-            const verificarEmail = 'SELECT Email FROM Utilizadores WHERE Email = $1';
-            conexaoBaseDados.query(verificarEmail, [email], (erro, resultado) => {
-                if (erro) {
-                    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ erro: 'Problema no servidor! Houve algum erro ao verificar o correio eletrónico.' });
-                } else {
-                    if (resultado.rowCount > 0) {
-                        if (emailEnviado(email)) {
-                            res.status(StatusCodes.OK).json({ resultado });
-                        } else {
-                            res.status(StatusCodes.FORBIDDEN).json({ response: 'Problema no envio do código de confirmação!' });
-                        }
-                    } else {
-                        const novoUtilizador = 'INSERT INTO Utilizadores (email) VALUES ($1)';
-                        conexaoBaseDados.query(novoUtilizador, [email], (erro, resultado) => {
-                            if (erro) {
-                                res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ response: 'Problema no servidor, não foi possível fazer o registo!', erro });
-                            } else {
-                                res.status(StatusCodes.OK).json({ resultado });
-                            };
-                        });
-                    };
-                };
+
+
+        const email = req.query.email ?? 'teste@gmail.com'
+        console.log(email)
+        let user = await Utilizadores
+            .findOne({ where: { email: email } })
+            .then(data => { return data })
+            .catch(error => { console.log(error) })
+
+        console.log(user)
+
+
+
+        if (!!user) {
+            emailEnviado(email)
+            res.status(200).json({
+                success: true,
+                message: 'Autenticação realizada com sucesso!'
             });
-        };
+            return
+
+
+        }
+
+
     },
 
     login1: async (req, res) => {
@@ -109,6 +105,36 @@ module.exports = {
         });
 
     },
+    update_password: async (req, res) => {
+
+        const email = req.body.email
+        const passA = req.body.passA
+        const passN = req.body.passN
+        let user = await Utilizadores
+            .findOne({ where: { email: email } })
+            .then(data => { return data })
+            .catch(error => { console.log(error) })
+
+        if (user.password == passA) {
+
+            await sequelize.sync()
+                .then(async () => {
+                    await Utilizadores
+                        .update({
+                            password: passN
+                        }, {
+                            where: { email: email }
+                        })
+                        .then(() => res.status(200).json({ success: true, message: "Password Atualizada" }))
+                        .catch(error => { res.status(400); throw new Error(error); });
+                })
+
+        }
+
+
+
+
+    },
     login2: async (req, res) => {
 
         let email, password = null
@@ -134,25 +160,25 @@ module.exports = {
 
 
         if (!!user) {
-        console.log("b")
-        if (user.password == password) {
-            console.log("a")
-            let token = jwt.sign({ email: email }, config.JWT_SECRET,
-                // { expiresIn: '24h' }
-            );
+            console.log("b")
+            if (user.password == password) {
+                console.log("a")
+                let token = jwt.sign({ email: email }, config.JWT_SECRET,
+                    // { expiresIn: '24h' }
+                );
 
-            res.status(200).json({
-                success: true,
-                message: 'Autenticação realizada com sucesso!',
-                token: token,
-                username: user.nome,
-                role: user.id_role,
-                id: user.id,
-                email: user.email
-            });
-            return
+                res.status(200).json({
+                    success: true,
+                    message: 'Autenticação realizada com sucesso!',
+                    token: token,
+                    username: user.nome,
+                    role: user.id_role,
+                    id: user.id,
+                    email: user.email
+                });
+                return
+            }
         }
-    }
 
         res.status(403).json({
             success: false,

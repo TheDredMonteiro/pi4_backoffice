@@ -11,7 +11,10 @@ const emailEnviado = async (emailUtilizador) => {
 
   const randomOTP = Math.round(Math.random() * 10000).toString(10).padEnd(6, '0'); // Gera número aleatório no intervalo de 0 a 10000
   tempOTP = randomOTP; //Armazena o valor aleatório na variável temporária.
-
+  let user = await Utilizadores
+  .findOne({ where: { email: emailUtilizador } })
+  .then(data => { return data })
+  .catch(error => { console.log(error) })
   // Cria um novo transporter usando o SMTP do Gmail.
   const transporter = nodemailer.createTransport({
     host: "smtp.mailtrap.io",
@@ -26,8 +29,8 @@ const emailEnviado = async (emailUtilizador) => {
   const mailOptions = {
     from: '"Cursar" <cursar.pi4@gmail.com>',
     to: emailUtilizador,
-    subject: 'Código de autenticação',
-    text: `Olá, o seu código de autenticação é: ${tempOTP} \nEste código tem duração de 1 minuto, após o limite de tempo expirar, o código tornar-se-à inválido, o que vai implicar a reintrodução do endereço de e-mail.\n\nCursar`
+    subject: 'Recuperar conta',
+    text: `Olá, estás a tentar recuperar a tua conta, esta é a tua password antiga: ${user.password}. Cria uma nova password.\n\nCursar`
   };
   /*await sequelize.sync()
             .then(async () => {

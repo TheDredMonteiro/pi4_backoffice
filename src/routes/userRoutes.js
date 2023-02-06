@@ -10,11 +10,15 @@ router.get('/roles', userControllers.roles);
 router.get('/agente', userControllers.agente);
 router.get('/utilizador', userControllers.utilizador);
 router.post('/login1', userControllers.login1);
+router.post('/add', userControllers.add);
 router.post('/login2', userControllers.login2);
 router.put('/update_estado', userControllers.update_estado)
 router.put('/update', userControllers.update)
 router.put('/update_password', userControllers.update_password)
 router.get('/list', jwt_middleware.checkToken, userControllers.list);
+router.get('/listadmin', jwt_middleware.checkToken, userControllers.listadmin);
+router.get('/listrespo', jwt_middleware.checkToken, userControllers.listrespo);
+router.get('/listagentes', jwt_middleware.checkToken, userControllers.listagentes);
 //router.post('/otp', verificaCodigo);
 
 module.exports = router;

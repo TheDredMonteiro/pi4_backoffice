@@ -21,6 +21,7 @@ app.use((req, res, next) => {
 //* Rotas
 app.use('/user', require('./routes/userRoutes'));
 app.use('/pontos', require('./routes/pontosRoutes'));
+app.use('/regioes', require('./routes/regioesRoutes'));
 
 // rota de introdução, apresenta um html bonitinho só
 app.use('/', (req, res) => {

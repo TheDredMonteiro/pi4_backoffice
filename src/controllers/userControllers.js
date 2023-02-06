@@ -215,6 +215,46 @@ module.exports = {
 
 
     },
+    add: async (req, res) => {
+        if (
+            !req.body.id_role ||
+            !req.body.nome ||
+            !req.body.password ||
+            !req.body.email
+        ) {
+            res.status(400).json({
+                success: false,
+                message: 'Faltam dados! É preciso username, email, password, e role.'
+            })
+            return
+        }
+
+        const nome = req.body.nome
+        const email = req.body.email
+        const nif = req.body.nif
+        const fotografia = req.body.fotografia
+        const id_role = req.body.id_role
+        const data_nascimento = req.body.data_nascimento
+        const password = req.body.password
+
+        await sequelize.sync()
+            .then(async () => {
+                await Utilizadores
+                    .create({
+                        nome: nome,
+                        email: email,
+                        nif: nif,
+                        fotografia: fotografia,
+                        pontos: 0,
+                        id_role: id_role,
+                        data_nascimento: data_nascimento,
+                        estado: 0,
+                        password: password
+                    },)
+                    .then(() => res.status(200).json({ success: true, message: "Utilizador criado" }))
+                    .catch(error => { res.status(400); throw new Error(error); });
+            })
+    },
     update: async (req, res) => {
 
         
@@ -245,7 +285,7 @@ module.exports = {
                     }, {
                         where: { id: id }
                     })
-                    .then(() => res.status(200).json({ success: true, message: "Estado atualizado" }))
+                    .then(() => res.status(200).json({ success: true, message: "Estado editado" }))
                     .catch(error => { res.status(400); throw new Error(error); });
             })
 
@@ -286,6 +326,84 @@ module.exports = {
                         { model: Utilizadores_Roles}
                     ]
                    
+                })
+                    .then(function (data) {
+                        return data;
+                    })
+                    .catch(error => {
+                        return error;
+                    });
+                res.json({ success: true, data: data });
+            })
+    },
+    listagentes: async (req, res) => {
+        // para filtrar por estado
+        const filtro = req.query.filtro ?? 'id'
+        const ordem = req.query.ordem ?? 'ASC'
+
+        await sequelize.sync()
+            .then(async () => {
+
+                const data = await Utilizadores.findAll({
+                    where: { id_role: 3 },
+                    include: [
+                        { model: Utilizadores_Roles }
+                    ],
+                    order: [
+                        [filtro, ordem]
+                    ]
+                })
+                    .then(function (data) {
+                        return data;
+                    })
+                    .catch(error => {
+                        return error;
+                    });
+                res.json({ success: true, data: data });
+            })
+    },
+    listadmin: async (req, res) => {
+        // para filtrar por estado
+        const filtro = req.query.filtro ?? 'id'
+        const ordem = req.query.ordem ?? 'ASC'
+
+        await sequelize.sync()
+            .then(async () => {
+
+                const data = await Utilizadores.findAll({
+                    where: { id_role: 1 },
+                    include: [
+                        { model: Utilizadores_Roles }
+                    ],
+                    order: [
+                        [filtro, ordem]
+                    ]
+                })
+                    .then(function (data) {
+                        return data;
+                    })
+                    .catch(error => {
+                        return error;
+                    });
+                res.json({ success: true, data: data });
+            })
+    },
+    listrespo: async (req, res) => {
+        // para filtrar por estado
+        const filtro = req.query.filtro ?? 'id'
+        const ordem = req.query.ordem ?? 'ASC'
+
+        await sequelize.sync()
+            .then(async () => {
+
+                const data = await Utilizadores.findAll({
+                    where: { id_role: 2 },
+                    include: [
+                        { model: Utilizadores_Roles }
+                    ],
+                    order: [
+                        [filtro, ordem]
+                    ]
                 })
                     .then(function (data) {
                         return data;

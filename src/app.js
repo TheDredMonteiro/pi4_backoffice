@@ -29,5 +29,5 @@ app.use('/', (req, res) => {
 });
 
 app.listen(PORT_API, () => {
-    console.log(`Server online on: ${HOST_API}:${PORT_API} \n`)
+    console.log(`Server online on: ${HOST_API} \n`)
 });

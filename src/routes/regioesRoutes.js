@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
 })
 
 router.get('/list', regioesController.list)
-
+router.post('/add', regioesController.add);
 
 //router.post('/new', pedidosController.new)
 

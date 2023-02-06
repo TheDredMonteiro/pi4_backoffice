@@ -215,6 +215,64 @@ module.exports = {
 
 
     },
+    update: async (req, res) => {
+
+        
+        const nome = req.body.nome
+        const email = req.body.email
+        const nif = req.body.nif
+        const fotografia = req.body.fotografia
+        const pontos = req.body.pontos
+        const id_role = req.body.id_role
+        const data_nascimento = req.body.data_nascimento
+        const password = req.body.password
+        const id = req.body.id
+
+        console.log(id);
+
+        await sequelize.sync()
+            .then(async () => {
+                await Utilizadores
+                    .update({
+                        nome: nome,
+                        email: email,
+                        nif: nif,
+                        fotografia: fotografia,
+                        pontos: pontos,
+                        id_role: id_role,
+                        data_nascimento: data_nascimento,
+                        password: password
+                    }, {
+                        where: { id: id }
+                    })
+                    .then(() => res.status(200).json({ success: true, message: "Estado atualizado" }))
+                    .catch(error => { res.status(400); throw new Error(error); });
+            })
+
+
+    },
+    utilizador: async (req, res) => {
+        const id = req.query.id ?? ''
+
+        await sequelize.sync()
+            .then(async () => {
+
+                const data = await Utilizadores.findOne({
+                    where: { id: id },
+                    include: [
+                        { model: Utilizadores_Roles}
+                    ]
+                   
+                })
+                    .then(function (data) {
+                        return data;
+                    })
+                    .catch(error => {
+                        return error;
+                    });
+                res.json({ success: true, data: data });
+            })
+    },
     agente: async (req, res) => {
         // para filtrar por estado
         const id = req.query.id ?? ''
@@ -253,6 +311,25 @@ module.exports = {
                     order: [
                         [filtro, ordem]
                     ]
+                })
+                    .then(function (data) {
+                        return data;
+                    })
+                    .catch(error => {
+                        return error;
+                    });
+                res.json({ success: true, data: data });
+            })
+    },
+    roles: async (req, res) => {
+        // para filtrar por estado
+
+
+        await sequelize.sync()
+            .then(async () => {
+
+                const data = await Utilizadores_Roles.findAll({
+      
                 })
                     .then(function (data) {
                         return data;

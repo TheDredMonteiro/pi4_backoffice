@@ -8,6 +8,9 @@ router.get('/', (req, res) => {
 })
 
 router.get('/list', pontosController.list)
+router.get('/list1', pontosController.list1)
+router.get('/regiao2', pontosController.regiao2)
+router.get('/listregiao', pontosController.listregiao)
 router.get('/listtipo', pontosController.listtipo)
 
 

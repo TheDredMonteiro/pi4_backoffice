@@ -20,15 +20,83 @@ module.exports = {
             .then(async () => {
 
                 const data = await Pontos_interesse.findAll({
+                   
+                    
                     include: [
-                        {model: Utilizadores}
-                    ],
-                    include: [
-                        {model: Regioes}
-                    ],
-                    include: [
+                        {model: Utilizadores},
+                        {model: Regioes},
                         {model: Tipos_pontos_interesse}
                     ],
+                    order: [
+                        [filtro, ordem]
+                    ]
+                })
+                    .then(function (data) {
+                        return data;
+                    })
+                    .catch(error => {
+                        return error;
+                    });
+                res.json({ success: true, data: data });
+            })
+    },
+    list1: async (req, res) => {
+        // para filtrar por estado
+        const id = req.query.id ?? ''
+        
+
+        await sequelize.sync()
+            .then(async () => {
+
+                const data = await Pontos_interesse.findOne({
+                   
+                    where: { id: id },
+                    include: [
+                        {model: Utilizadores},
+                        {model: Regioes},
+                        {model: Tipos_pontos_interesse}
+                    ]
+                })
+                    .then(function (data) {
+                        return data;
+                    })
+                    .catch(error => {
+                        return error;
+                    });
+                res.json({ success: true, data: data });
+            })
+    },
+    regiao2: async (req, res) => {
+        // para filtrar por estado
+        const id = req.query.id ?? ''
+
+        await sequelize.sync()
+            .then(async () => {
+
+                const data = await Regioes.findOne({
+                    where: { id: id },
+                    include: [
+                        { model: Utilizadores}
+                    ]
+                })
+                    .then(function (data) {
+                        return data;
+                    })
+                    .catch(error => {
+                        return error;
+                    });
+                res.json({ success: true, data: data });
+            })
+    },
+    listregiao: async (req, res) => {
+        // para filtrar por estado
+        const filtro = req.query.filtro ?? 'id'
+        const ordem = req.query.ordem ?? 'ASC'
+
+        await sequelize.sync()
+            .then(async () => {
+
+                const data = await Regioes.findAll({
                     order: [
                         [filtro, ordem]
                     ]

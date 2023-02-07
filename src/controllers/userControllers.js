@@ -450,6 +450,21 @@ module.exports = {
                 res.json({ success: true, data: data });
             })
     },
+    count: async (req, res) => {
+        // para filtrar por estado
+        const role = req.query.role ?? ""
+        let response = {}
+
+        await sequelize.sync()
+            .then(async () => {
+
+                await Utilizadores.count({
+                    where: { id_role: role },
+                })
+                .then(count => { response = { ...response, count: count } })
+            })
+            res.json(response)
+    },
     roles: async (req, res) => {
         // para filtrar por estado
 

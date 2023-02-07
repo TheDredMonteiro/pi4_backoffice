@@ -220,6 +220,14 @@ const Recompensas = sequelize.define('recompensas', {
         type: DataTypes.BOOLEAN,
         allowNull: false
     },
+    fotografia: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    quantidade: {
+        type: DataTypes.INTEGER,
+        allowNull: true
+    },
     validade: {
         type: DataTypes.INTEGER,
         allowNull: true
@@ -267,6 +275,18 @@ Lugar.belongsTo(Reservas, {
         allowNull: false
     }
 })
+Utilizadores.hasMany(Recompensas, {
+    foreignKey: {
+        name: 'id_utilizador',
+        allowNull: false
+    }
+})
+Recompensas.belongsTo(Utilizadores, {
+    foreignKey: {
+        name: 'id_utilizador',
+        allowNull: false
+    }
+})
 Utilizadores.hasMany(Reservas, {
     foreignKey: {
         name: 'id_utilizador',
@@ -279,12 +299,25 @@ Reservas.belongsTo(Utilizadores, {
         allowNull: false
     }
 })
+Utilizadores.hasMany(Visitas, {
+    foreignKey: {
+        name: 'id_utilizador',
+        allowNull: false
+    }
+})
+Visitas.belongsTo(Utilizadores, {
+    foreignKey: {
+        name: 'id_utilizador',
+        allowNull: false
+    }
+})
 Visitas.hasMany(Reservas, {
     foreignKey: {
         name: 'id_visita',
         allowNull: false
     }
 })
+
 Reservas.belongsTo(Visitas, {
     foreignKey: {
         name: 'id_visita',

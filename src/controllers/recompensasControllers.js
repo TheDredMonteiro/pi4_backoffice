@@ -63,7 +63,10 @@ module.exports = {
             .then(async () => {
 
                 const data = await Recompensas.findOne({
-                    where: { id: id }
+                    where: { id: id },
+                    include: [
+                        { model: Utilizadores }
+                    ]
                 })
                     .then(function (data) {
                         return data;
@@ -79,7 +82,8 @@ module.exports = {
             !req.body.recompensa ||
             !req.body.descricao ||
             !req.body.num_pontos||
-            !req.body.disponivel||
+            !req.body.fotografia||
+            !req.body.id_utilizador||
             !req.body.validade
             
         ) {
@@ -95,8 +99,9 @@ module.exports = {
         const descricao = req.body.descricao
         const num_pontos = req.body.num_pontos
         const disponivel = req.body.disponivel
+        const fotografia = req.body.fotografia
         const validade = req.body.validade
-
+        const id_utilizador = req.body.id_utilizador
         await sequelize.sync()
             .then(async () => {
                 await Recompensas
@@ -104,7 +109,8 @@ module.exports = {
                         recompensa: recompensa,
                         descricao: descricao,
                         num_pontos: num_pontos,
-                        disponivel: disponivel,
+                        fotografia: fotografia,
+                        id_utilizador: id_utilizador,
                         validade: validade
                     },
                     {
@@ -120,8 +126,9 @@ module.exports = {
             !req.body.recompensa ||
             !req.body.descricao ||
             !req.body.num_pontos||
+            !req.body.fotografia||
+            !req.body.id_utilizador||
             !req.body.validade
-            
         ) {
             res.status(400).json({
                 success: false,
@@ -129,18 +136,23 @@ module.exports = {
             })
             return
         }
-
+        console.log("b")
         const recompensa = req.body.recompensa
         const descricao = req.body.descricao
         const num_pontos = req.body.num_pontos
+        const fotografia = req.body.fotografia
         const validade = req.body.validade
+        const id_utilizador = req.body.id_utilizador
         await sequelize.sync()
             .then(async () => {
                 await Recompensas
                     .create({
+                       
                         recompensa: recompensa,
                         descricao: descricao,
                         num_pontos: num_pontos,
+                        fotografia: fotografia,
+                        id_utilizador: id_utilizador,
                         disponivel: 1,
                         validade: validade
                     },)

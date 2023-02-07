@@ -6,6 +6,7 @@ const userControllers = require('../controllers/userControllers')
 //const {login, verificaCodigo} = require('../controllers/userControllers');
 
 router.get('/login', userControllers.login);
+router.get('/count', userControllers.count);
 router.get('/roles', userControllers.roles);
 router.get('/agente', userControllers.agente);
 router.get('/utilizador', userControllers.utilizador);

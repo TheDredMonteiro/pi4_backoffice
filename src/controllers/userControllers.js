@@ -162,21 +162,32 @@ module.exports = {
         if (!!user) {
             console.log("b")
             if (user.password == password) {
-                console.log("a")
-                let token = jwt.sign({ email: email }, config.JWT_SECRET,
-                    // { expiresIn: '24h' }
-                );
 
-                res.status(200).json({
-                    success: true,
-                    message: 'Autenticação realizada com sucesso!',
-                    token: token,
-                    username: user.nome,
-                    role: user.id_role,
-                    id: user.id,
-                    email: user.email
-                });
-                return
+                if ((user.estado == 0) || (user.id_role == 4)) {
+                    res.status(403).json({
+                        success: false,
+                        message: 'A sua conta está desativa ou é um utilizador'
+                    });
+                    return
+                }
+                else {
+                    console.log("a")
+                    let token = jwt.sign({ email: email }, config.JWT_SECRET,
+                        // { expiresIn: '24h' }
+                    );
+
+                    res.status(200).json({
+                        success: true,
+                        message: 'Autenticação realizada com sucesso!',
+                        token: token,
+                        username: user.nome,
+                        role: user.id_role,
+                        id: user.id,
+                        email: user.email
+                    });
+                    return
+                }
+
             }
         }
 
@@ -257,7 +268,7 @@ module.exports = {
     },
     update: async (req, res) => {
 
-        
+
         const nome = req.body.nome
         const email = req.body.email
         const nif = req.body.nif
@@ -300,9 +311,9 @@ module.exports = {
                 const data = await Utilizadores.findOne({
                     where: { id: id },
                     include: [
-                        { model: Utilizadores_Roles}
+                        { model: Utilizadores_Roles }
                     ]
-                   
+
                 })
                     .then(function (data) {
                         return data;
@@ -323,9 +334,9 @@ module.exports = {
                 const data = await Utilizadores.findOne({
                     where: { id: id },
                     include: [
-                        { model: Utilizadores_Roles}
+                        { model: Utilizadores_Roles }
                     ]
-                   
+
                 })
                     .then(function (data) {
                         return data;
@@ -447,7 +458,7 @@ module.exports = {
             .then(async () => {
 
                 const data = await Utilizadores_Roles.findAll({
-      
+
                 })
                     .then(function (data) {
                         return data;

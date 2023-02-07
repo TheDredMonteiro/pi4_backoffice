@@ -1,4 +1,4 @@
-var { Pontos_interesse, Regioes, Tipos_pontos_interesse , Utilizadores} = require('../model/tabelas')
+var { Pontos_interesse, Regioes, Recompensas ,Tipos_pontos_interesse , Utilizadores} = require('../model/tabelas')
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 const bcrypt = require('bcrypt');
@@ -19,12 +19,7 @@ module.exports = {
         await sequelize.sync()
             .then(async () => {
 
-                const data = await Regioes.findAll({
-                   
-                    
-                    include: [
-                        {model: Utilizadores}
-                    ],
+                const data = await Recompensas.findAll({
                     order: [
                         [filtro, ordem]
                     ]
@@ -38,7 +33,28 @@ module.exports = {
                 res.json({ success: true, data: data });
             })
     },
-    regiao: async (req, res) => {
+    update_disponivel: async (req, res) => {
+
+        const id = req.body.id
+        const disponivel = req.body.disponivel
+
+
+
+        await sequelize.sync()
+            .then(async () => {
+                await Recompensas
+                    .update({
+                        disponivel: disponivel
+                    }, {
+                        where: { id: id }
+                    })
+                    .then(() => res.status(200).json({ success: true, message: "Estado atualizado" }))
+                    .catch(error => { res.status(400); throw new Error(error); });
+            })
+
+
+    },
+    recompensa: async (req, res) => {
         // para filtrar por estado
         const id = req.query.id ?? ''
    
@@ -46,12 +62,8 @@ module.exports = {
         await sequelize.sync()
             .then(async () => {
 
-                const data = await Regioes.findOne({
-                    where: { id: id },
-                    include: [
-                        { model: Utilizadores }
-                    ]
-
+                const data = await Recompensas.findOne({
+                    where: { id: id }
                 })
                     .then(function (data) {
                         return data;
@@ -64,64 +76,75 @@ module.exports = {
     },
     update: async (req, res) => {
         if (
-            !req.body.regiao ||
-            !req.body.id_utilizador ||
-            !req.body.fotografia_1
+            !req.body.recompensa ||
+            !req.body.descricao ||
+            !req.body.num_pontos||
+            !req.body.disponivel||
+            !req.body.validade
+            
         ) {
             res.status(400).json({
                 success: false,
-                message: 'Faltam dados! É preciso regiao, id_utilizador e fotografia_1.'
+                message: 'Faltam dados!'
             })
             return
         }
 
-        const regiao = req.body.regiao
+        const recompensa = req.body.recompensa
         const id = req.body.id
-        const id_utilizador = req.body.id_utilizador
-        const fotografia_1 = req.body.fotografia_1
+        const descricao = req.body.descricao
+        const num_pontos = req.body.num_pontos
+        const disponivel = req.body.disponivel
+        const validade = req.body.validade
 
         await sequelize.sync()
             .then(async () => {
-                await Regioes
+                await Recompensas
                     .update({
-                        regiao: regiao,
-                        id_utilizador: id_utilizador,
-                        fotografia_1: fotografia_1
+                        recompensa: recompensa,
+                        descricao: descricao,
+                        num_pontos: num_pontos,
+                        disponivel: disponivel,
+                        validade: validade
                     },
                     {
                         where: { id: id }
                     })
                     
-                    .then(() => res.status(200).json({ success: true, message: "Região criada" }))
+                    .then(() => res.status(200).json({ success: true, message: "Recompensa editada" }))
                     .catch(error => { res.status(400); throw new Error(error); });
             })
     },
     add: async (req, res) => {
         if (
-            !req.body.regiao ||
-            !req.body.id_utilizador ||
-            !req.body.fotografia_1
+            !req.body.recompensa ||
+            !req.body.descricao ||
+            !req.body.num_pontos||
+            !req.body.validade
+            
         ) {
             res.status(400).json({
                 success: false,
-                message: 'Faltam dados! É preciso regiao, id_utilizador e fotografia_1.'
+                message: 'Faltam dados!'
             })
             return
         }
 
-        const regiao = req.body.regiao
-        const id_utilizador = req.body.id_utilizador
-        const fotografia_1 = req.body.fotografia_1
-
+        const recompensa = req.body.recompensa
+        const descricao = req.body.descricao
+        const num_pontos = req.body.num_pontos
+        const validade = req.body.validade
         await sequelize.sync()
             .then(async () => {
-                await Regioes
+                await Recompensas
                     .create({
-                        regiao: regiao,
-                        id_utilizador: id_utilizador,
-                        fotografia_1: fotografia_1
+                        recompensa: recompensa,
+                        descricao: descricao,
+                        num_pontos: num_pontos,
+                        disponivel: 1,
+                        validade: validade
                     },)
-                    .then(() => res.status(200).json({ success: true, message: "Região criada" }))
+                    .then(() => res.status(200).json({ success: true, message: "Recompensa criada" }))
                     .catch(error => { res.status(400); throw new Error(error); });
             })
     },

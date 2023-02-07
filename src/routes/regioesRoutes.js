@@ -8,7 +8,9 @@ router.get('/', (req, res) => {
 })
 
 router.get('/list', regioesController.list)
+router.get('/regiao', regioesController.regiao)
 router.post('/add', regioesController.add);
+router.put('/update', regioesController.update);
 
 //router.post('/new', pedidosController.new)
 
